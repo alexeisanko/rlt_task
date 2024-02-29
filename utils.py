@@ -1,3 +1,4 @@
+import re
 from typing import Dict, Tuple, List
 from datetime import datetime
 
@@ -46,3 +47,14 @@ async def insert_sample_collection(file: str) -> None:
         data_bson = f.read()
         data = bson.decode_all(data_bson)
     await MongoDB.insert_data(data)
+
+
+async def validate_data(text: str) -> bool:
+    regexp = re.compile(
+        '^\s*{\s*"dt_from": "\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d",\s*"dt_upto": "\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d",\s*"group_type": "(\w+)"\s*}\s*$')
+    is_valid = regexp.match(text)
+    if not is_valid:
+        return False
+    if is_valid.group(1) not in ['month', 'day', 'hour']:
+        return False
+    return True
