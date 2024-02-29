@@ -28,7 +28,7 @@ async def prepare_data(start_dt: datetime, end_dt: datetime, step_type: dict) ->
 
     while aggregate_dt <= end_dt:
         if aggregate_dt + inc_dt > end_dt:
-            aggregate = await MongoDB.get_filter_aggregate_data(aggregate_dt, end_dt)
+            aggregate = await MongoDB.get_filter_aggregate_data(aggregate_dt, end_dt + relativedelta(seconds=1))
         else:
             aggregate = await MongoDB.get_filter_aggregate_data(aggregate_dt, aggregate_dt + inc_dt)
 
